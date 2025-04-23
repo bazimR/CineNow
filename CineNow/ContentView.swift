@@ -14,8 +14,22 @@ struct ContentView: View {
                 .imageScale(.large)
                 .foregroundStyle(.tint)
             Text("Hello, world!")
+            Button("fetch movies") {
+                Task {
+                    await fetchPopularMovies()
+                }
+            }
         }
         .padding()
+    }
+
+    func fetchPopularMovies() async {
+        do {
+            let movies = try await TMDBService.shared.fetchPopularMovies()
+            print(movies)
+        } catch {
+            print("failed to fetch \(error.localizedDescription)")
+        }
     }
 }
 
