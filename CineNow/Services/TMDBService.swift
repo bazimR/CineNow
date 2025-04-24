@@ -32,19 +32,21 @@ struct TMDBService {
 
     func fetchPopularMovies() async throws -> [Movie] {
         // Step 1: Construct the base URL
-        guard let url = URL(string: "\(Constants.API.baseURL)/movie/popular") else {
-            throw TMDBError.invalidURL // Throw error if URL is invalid
+        guard let url = URL(string: "\(Constants.API.baseURL)/movie/popular")
+        else {
+            throw TMDBError.invalidURL  // Throw error if URL is invalid
         }
-        
+
         // Step 2: Add query parameters (language in this case)
         var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
         let queryItems: [URLQueryItem] = [
             URLQueryItem(name: "language", value: Constants.API.language)
         ]
         let localComponents = components
-        components?.queryItems = (localComponents?.queryItems ?? []) + queryItems
+        components?.queryItems =
+            (localComponents?.queryItems ?? []) + queryItems
         guard let finalURL = components?.url else {
-            throw TMDBError.invalidURL // Throw error if final URL is malformed
+            throw TMDBError.invalidURL  // Throw error if final URL is malformed
         }
 
         // Step 3: Create the URLRequest with necessary headers
@@ -53,27 +55,20 @@ struct TMDBService {
         request.timeoutInterval = 10
         request.allHTTPHeaderFields = [
             "accept": "application/json",
-            "Authorization": "Bearer \(Constants.API.key)"
+            "Authorization": "Bearer \(Constants.API.key)",
         ]
-        
-        // Step 4: Fetch data using URLSession
-        do {
-            let (data, response) = try await URLSession.shared.data(for: request)
-            
-            // Step 5: Validate the response
-            guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
-                throw TMDBError.invalidResponse // Throw error if response code is not 2xx
-            }
 
-            // Step 6: Decode the data into the MovieResponse model
-            do {
-                let movieResponse = try JSONDecoder().decode(MovieResponse.self, from: data)
-                return movieResponse.results // Return the movie results
-            } catch {
-                throw TMDBError.decodingError // Throw error if decoding fails
-            }
+        do {
+            let movieResponse: MovieResponse = try await NetworkManager.shared
+                .fetch(
+                    url: request,
+                    type: MovieResponse.self
+                )
+            return movieResponse.results
+        } catch let error as NetworkError {
+            throw TMDBError.unknown(error)
         } catch {
-            throw TMDBError.unknown(error) // Catch any other errors
+            throw TMDBError.unknown(error)
         }
     }
 
