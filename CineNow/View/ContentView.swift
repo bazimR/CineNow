@@ -8,12 +8,21 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var movielist: [Movie] = []
     var body: some View {
         VStack {
             Image(systemName: "globe")
                 .imageScale(.large)
                 .foregroundStyle(.tint)
-            Text("Hello, world!")
+            Text("\(movielist.count)")
+            if !movielist.isEmpty {
+                AsyncImage(
+                    url: URL(
+                        string: Constants.API.imageBaseUrl
+                        + "/original\(movielist[1].backdrop_path)"
+                    )
+                )
+            }
             Button("fetch movies") {
                 Task {
                     await fetchPopularMovies()
@@ -26,6 +35,7 @@ struct ContentView: View {
     func fetchPopularMovies() async {
         do {
             let movies = try await TMDBService.shared.fetchPopularMovies()
+            movielist = movies
             print(movies)
         } catch {
             print("failed to fetch \(error.localizedDescription)")
