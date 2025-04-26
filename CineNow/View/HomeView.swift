@@ -10,8 +10,17 @@ import SwiftUI
 extension View {
     func navigationBarTitleMainColor(_ color: Color) -> some View {
         let uiColor = UIColor(color)
+
+        // Create a shadow
+        let shadow = NSShadow()
+        shadow.shadowColor = UIColor.black.withAlphaComponent(0.2)
+        shadow.shadowOffset = CGSize(width: 2, height: 2)
+        shadow.shadowBlurRadius = 3
         UINavigationBar
-            .appearance().largeTitleTextAttributes = [.foregroundColor: uiColor]
+            .appearance().largeTitleTextAttributes = [
+                .foregroundColor: uiColor,
+                .shadow: shadow,
+            ]
         return self
     }
     func navigationBarTitleInlineColor(_ color: Color) -> some View {
