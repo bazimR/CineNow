@@ -32,13 +32,13 @@ struct TMDBService {
 
     func fetchPopularMovies() async throws -> [Movie] {
         // Step 1: Construct the base URL
-        guard let url = URL(string: "\(Constants.API.baseURL)/movie/popular")
+        guard let url = URL(string: "\(Constants.API.baseURL)movie/popular")
         else {
             throw TMDBError.invalidURL  // Throw error if URL is invalid
         }
 
         // Step 2: Add query parameters (language in this case)
-        var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+        var components = URLComponents(url: url, resolvingAgainstBaseURL: true)
         let queryItems: [URLQueryItem] = [
             URLQueryItem(name: "language", value: Constants.API.language)
         ]

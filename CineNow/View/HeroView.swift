@@ -19,23 +19,21 @@ struct HeroView: View {
             string:
                 "https://upload.wikimedia.org/wikipedia/en/0/0d/Avengers_Endgame_poster.jpg"
         ),
-
-        URL(
-            string:
-                "https://upload.wikimedia.org/wikipedia/en/c/c1/The_Matrix_Poster.jpg"
-        ),
-
         URL(
             string:
                 "https://upload.wikimedia.org/wikipedia/en/f/fc/Fight_Club_poster.jpg"
         ),
     ]
-   
+
+    @State private var movies: [Movie] = [Movie]()
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            LazyHStack(spacing:0){
-                ForEach(0..<array.count, id: \.self) { Index in
-                    let url = array[Index]
+            LazyHStack(spacing: 0) {
+                ForEach(0..<movies.count, id: \.self) { Index in
+                    let movie = movies[Index]
+                    let url = URL(
+                        string: "\(Constants.API.imageBaseUrl)/w500\(movie.poster_path)"
+                    )
                     VStack {
                         AsyncImage(url: url) { phase in
                             switch phase {
@@ -73,6 +71,16 @@ struct HeroView: View {
                     }.containerRelativeFrame(
                         .horizontal
                     )
+                }
+            }.onAppear {
+                Task {
+                    do {
+                        movies = try await TMDBService.shared.fetchPopularMovies()
+                        print("success")
+                        print(movies[0].poster_path)
+                    } catch {
+                        print("Failed to fetch movies: \(error)")
+                    }
                 }
             }
         }.scrollTargetBehavior(.paging)
