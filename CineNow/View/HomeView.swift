@@ -37,7 +37,16 @@ struct HomeView: View {
         NavigationStack {
             ScrollView(.vertical, showsIndicators: false) {
                 HeroView()
-            }.ignoresSafeArea().navigationTitle("Home")
+            }.ignoresSafeArea().navigationTitle("Home").toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        
+                    } label: {
+                        Label("settings", systemImage: "gear")
+                    }
+
+                }
+            }
         }.navigationBarTitleMainColor(.white)
     }
 }
