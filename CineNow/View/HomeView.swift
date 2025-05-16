@@ -37,10 +37,22 @@ struct HomeView: View {
         NavigationStack {
             ScrollView(.vertical, showsIndicators: false) {
                 HeroView()
+                VStack {
+                    HStack {
+                        Text("Discover movies to watch").font(.title2.bold())
+                        Image(systemName: "chevron.right")
+                            .font(.title)
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                    }.padding(.horizontal)
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        
+                    }
+                }
             }.ignoresSafeArea().navigationTitle("Home").toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        
+
                     } label: {
                         Label("settings", systemImage: "gear")
                     }

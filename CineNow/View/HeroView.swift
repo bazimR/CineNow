@@ -26,16 +26,11 @@ struct HeroView: View {
                                     AsyncImage(url: url) { phase in
                                         switch phase {
                                         case .empty:
-                                            ProgressView().progressViewStyle(
-                                                .circular
-                                            )
-                                            .frame(
+                                            SkeletonView().frame(
                                                 width: UIScreen.main.bounds
                                                     .width,
                                                 height: 600
-                                            )
-                                            .scaledToFit()
-                                            .background(Color.gray.opacity(0.2))
+                                            ).cornerRadius(0)
 
                                         case .success(let image):
                                             image
@@ -50,20 +45,19 @@ struct HeroView: View {
                                             VStack {
                                                 Image(
                                                     systemName:
-                                                        "exclamationmark.triangle"
+                                                        "photo.badge.exclamationmark"
                                                 )
                                                 .resizable()
                                                 .scaledToFit()
                                                 .frame(width: 100, height: 100)
-                                                .foregroundColor(.red)
+                                                .foregroundColor(.secondary)
                                             }
                                             .frame(
                                                 width: UIScreen.main.bounds
                                                     .width,
                                                 height: 600
                                             )
-                                            .background(Color.red.opacity(0.3))
-                                            .cornerRadius(12)
+                                            .background(Color.gray.opacity(0.2))
                                         @unknown default:
                                             VStack {
                                                 Text("Unknown error")
@@ -148,9 +142,10 @@ struct HeroView: View {
                         } label: {
                             Label("Retry", systemImage: "arrow.clockwise")
                                 .font(.headline)
+                                .foregroundStyle(.primary)
                         }.buttonBorderShape(.capsule)
                             .buttonStyle(.borderedProminent)
-                            .tint(.blue).controlSize(.large)
+                            .tint(.white.opacity(0.6)).controlSize(.large)
                     }
                     .frame(
                         width: UIScreen.main.bounds.width,
