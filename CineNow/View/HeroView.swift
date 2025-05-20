@@ -11,146 +11,23 @@ struct HeroView: View {
     @State var viewModel: HeroViewModel = HeroViewModel()
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            Group {
-                if !viewModel.errorFetching {
-                    LazyHStack(spacing: 0) {
-                        ForEach(0..<viewModel.movies.count, id: \.self) {
-                            Index in
-                            let movie = viewModel.movies[Index]
-                            let url = URL(
-                                string:
-                                    "\(Constants.API.imageBaseUrl)/original\(movie.poster_path)"
-                            )
-                            VStack {
-                                ZStack {
-                                    AsyncImage(url: url) { phase in
-                                        switch phase {
-                                        case .empty:
-                                            SkeletonView().frame(
-                                                width: UIScreen.main.bounds
-                                                    .width,
-                                                height: 600
-                                            ).cornerRadius(0)
-
-                                        case .success(let image):
-                                            image
-                                                .resizable()
-                                                .scaledToFill()
-                                                .frame(
-                                                    width: UIScreen.main.bounds
-                                                        .width,
-                                                    height: 600
-                                                ).clipped()
-                                        case .failure(_):
-                                            VStack {
-                                                Image(
-                                                    systemName:
-                                                        "photo.badge.exclamationmark"
-                                                )
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(width: 100, height: 100)
-                                                .foregroundColor(.secondary)
-                                            }
-                                            .frame(
-                                                width: UIScreen.main.bounds
-                                                    .width,
-                                                height: 600
-                                            )
-                                            .background(Color.gray.opacity(0.2))
-                                        @unknown default:
-                                            VStack {
-                                                Text("Unknown error")
-                                            }
-                                        }
-                                    }
-                                    VStack {
-                                        Spacer()
-                                        VStack(alignment: .center, spacing: 15)
-                                        {
-                                            Text(movie.title)
-                                                .font(.largeTitle.bold())
-                                                .foregroundStyle(.primary)
-                                                .padding(.horizontal, 15)
-                                                .padding(.top, 5)
-                                                .multilineTextAlignment(.center)
-                                            Text(movie.overview)
-                                                .font(.caption)
-                                                .foregroundStyle(
-                                                    .primary.opacity(0.6)
-                                                )
-                                                .padding(.horizontal, 15)
-                                                .lineLimit(3)
-                                                .truncationMode(.tail)
-                                                .multilineTextAlignment(.center)
-                                            HStack {
-                                                Button(
-                                                    "More info",
-                                                    systemImage: "info.circle"
-                                                ) {}
-                                                .foregroundStyle(.black)
-                                                .buttonStyle(.borderedProminent)
-                                                .tint(.white)
-                                                .font(.headline)
-                                                .buttonBorderShape(.capsule)
-
-                                                Button {
-                                                    // Action here
-                                                } label: {
-                                                    Image(systemName: "plus")
-                                                        .fontWeight(.bold)
-                                                }
-                                                .foregroundStyle(.black)
-                                                .buttonStyle(.borderedProminent)
-                                                .tint(.white.opacity(0.2))
-                                                .buttonBorderShape(.circle)
-                                                .controlSize(.large)
-                                            }
-                                        }
-                                        .padding(5)
-                                        .padding(.vertical, 15)
-                                        .background(Material.ultraThin)
-                                        .clipShape(.rect(cornerRadius: 25))
-                                        .shadow(radius: 10)
-                                        .padding()
-                                    }
-                                }
-                                .frame(
-                                    width: UIScreen.main.bounds.width,
-                                    height: 600
-                                )
-                            }
-                            .containerRelativeFrame(.horizontal)
-                        }
-                    }
-                } else {
-                    VStack {
-                        ContentUnavailableView {
-                            Label(
-                                "Unable to Connect",
-                                systemImage: "wifi.exclamationmark"
-                            )
-                        } description: {
-                            Text(
-                                "Please check your internet connection and try again."
+            if viewModel.errorFetching {
+                HeroErrorView(retryAction: {
+                    Task { await viewModel.fetchPopularMovies() }
+                })
+            } else {
+                LazyHStack(spacing: 0) {
+                    ForEach(viewModel.movies.indices, id: \.self) { index in
+                        if let movie = viewModel.movies[safe: index],
+                            let posterPath = movie.poster_path
+                        {
+                            HeroMovieCard(
+                                movie: movie,
+                                imageUrl:
+                                    "\(Constants.API.imageBaseUrl)/original\(posterPath)"
                             )
                         }
-                        Button {
-                            Task {
-                                await viewModel.fetchPopularMovies()
-                            }
-                        } label: {
-                            Label("Retry", systemImage: "arrow.clockwise")
-                                .font(.headline)
-                                .foregroundStyle(.primary)
-                        }.buttonBorderShape(.capsule)
-                            .buttonStyle(.borderedProminent)
-                            .tint(.white.opacity(0.6)).controlSize(.large)
                     }
-                    .frame(
-                        width: UIScreen.main.bounds.width,
-                        height: 600
-                    )
                 }
             }
         }

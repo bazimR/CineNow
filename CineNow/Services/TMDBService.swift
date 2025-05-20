@@ -57,12 +57,11 @@ struct TMDBService {
             "accept": "application/json",
             "Authorization": "Bearer \(Constants.API.key)",
         ]
-
         do {
-            let movieResponse: MovieResponse = try await NetworkManager.shared
+            let movieResponse: PopularMoviesResponse = try await NetworkManager.shared
                 .fetch(
                     url: request,
-                    type: MovieResponse.self
+                    type: PopularMoviesResponse.self
                 )
             return movieResponse.results
         } catch let error as NetworkError {

@@ -44,8 +44,12 @@ final class NetworkManager {
                     NetworkError
                     .serverError(statusCode: httpResponse.statusCode)
             }
-
+            print("status code: \(httpResponse.statusCode)")
             do {
+                print(
+                    String(data: data, encoding: .utf8)
+                        ?? "Unable to decode response to string"
+                )
                 return try JSONDecoder().decode(T.self, from: data)
             } catch {
                 throw NetworkError.decodingFailed

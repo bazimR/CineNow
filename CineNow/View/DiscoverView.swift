@@ -10,7 +10,9 @@ import SwiftUI
 struct DiscoverView: View {
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-
+            LazyHStack {
+                
+            }
         }
     }
 }

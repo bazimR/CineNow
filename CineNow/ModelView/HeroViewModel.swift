@@ -17,7 +17,9 @@ class HeroViewModel {
             movies = try await TMDBService.shared.fetchPopularMovies()
         } catch {
             errorFetching = true
-            print("failed to fetch popular movies")
+            print(
+                "failed to fetch popular movies \(error.localizedDescription)"
+            )
         }
     }
 }
