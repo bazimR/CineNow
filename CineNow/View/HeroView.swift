@@ -30,7 +30,10 @@ struct HeroView: View {
                     }
                 }
             }
-        }
+        }.frame(
+            width: UIScreen.main.bounds.width,
+            height: 600
+        )
         .scrollTargetBehavior(.paging)  // ✅ Applied here
         .onAppear {
             Task {

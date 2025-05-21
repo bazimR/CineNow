@@ -30,5 +30,5 @@ struct HeroErrorView: View {
 }
 
 #Preview {
-//    HeroErrorView()
+    HeroErrorView(retryAction: {})
 }

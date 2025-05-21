@@ -48,7 +48,7 @@ struct HomeView: View {
                     ScrollView(.horizontal, showsIndicators: false) {
                         
                     }
-                }
+                }.padding(.top,10)
             }.ignoresSafeArea().navigationTitle("Home").toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {

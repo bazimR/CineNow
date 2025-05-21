@@ -15,11 +15,11 @@ class HeroViewModel {
     func fetchPopularMovies() async {
         do {
             movies = try await TMDBService.shared.fetchPopularMovies()
+            errorFetching = false
+
         } catch {
             errorFetching = true
-            print(
-                "failed to fetch popular movies \(error.localizedDescription)"
-            )
+            print(error.localizedDescription)
         }
     }
 }
