@@ -6,7 +6,7 @@ struct SkeletonView: View {
 
     var body: some View {
         RoundedRectangle(cornerRadius: cornerRadius)
-            .fill(Color.gray.opacity(0.6))
+            .fill(Color.white.opacity(0.7))
             .blinking(duration: 2)
     }
 }
@@ -17,7 +17,7 @@ struct BlinkViewModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .opacity(blinking ? 0.2 : 0.6)
+            .opacity(blinking ? 0.2 : 0.7)
             .animation(
                 .easeInOut(duration: duration).repeatForever(),
                 value: blinking

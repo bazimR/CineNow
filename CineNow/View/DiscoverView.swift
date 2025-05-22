@@ -8,15 +8,50 @@
 import SwiftUI
 
 struct DiscoverView: View {
+    let endpoint: String
+    let title: String
+    @State var viewModel: DiscoverViewModel
+
+    init(endpoint: String, title: String) {
+        self.endpoint = endpoint
+        self.title = title
+        _viewModel = State(
+            wrappedValue: DiscoverViewModel(endpoint: endpoint)
+        )
+    }
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            LazyHStack {
-                
+        VStack {
+            HStack {
+                Text(title)
+                    .font(.title3.bold())
+                    .lineLimit(1)
+                Image(systemName: "chevron.right")
+                    .font(.title)
+                    .foregroundStyle(.secondary)
+                Spacer()
+            }.padding(.horizontal)
+            ScrollView(.horizontal, showsIndicators: false) {
+                LazyHStack(spacing: 15) {
+                    ForEach(viewModel.movies.indices, id: \.self) { index in
+                        if let movie = viewModel.movies[safe: index],
+                            let posterPath = movie.poster_path
+                        {
+                            DiscoverMovieCard(
+                                imageUrl:
+                                    "\(Constants.API.imageBaseUrl)/w500\(posterPath)"
+                            )
+                        }
+                    }
+                }.padding(.horizontal)
+            }.onAppear {
+                Task {
+                    await viewModel.fetchDiscoverMovies()
+                }
             }
-        }
+        }.frame(height: 280)
     }
 }
 
 #Preview {
-    DiscoverView()
+    DiscoverView(endpoint: "/movie/top_rated", title: "Discover Top Rated")
 }

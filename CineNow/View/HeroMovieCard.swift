@@ -92,7 +92,7 @@ struct HeroMovieCard: View {
                         }
                     }
                     .frame(
-                        width: UIScreen.main.bounds.width - 20
+                        width: UIScreen.main.bounds.width - 40
                     )
                     .padding(.vertical, 15)
                     .background(Material.ultraThin)

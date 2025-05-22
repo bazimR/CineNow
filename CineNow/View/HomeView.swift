@@ -37,18 +37,20 @@ struct HomeView: View {
         NavigationStack {
             ScrollView(.vertical, showsIndicators: false) {
                 HeroView()
-                VStack {
-                    HStack {
-                        Text("Discover movies to watch").font(.title2.bold())
-                        Image(systemName: "chevron.right")
-                            .font(.title)
-                            .foregroundStyle(.secondary)
-                        Spacer()
-                    }.padding(.horizontal)
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        
-                    }
-                }.padding(.top,10)
+                VStack(spacing: 30) {
+                    DiscoverView(
+                        endpoint: "/movie/top_rated",
+                        title: "Top rated movies"
+                    )
+                    DiscoverView(
+                        endpoint: "/movie/now_playing",
+                        title: "Now playing movies"
+                    )
+                    DiscoverView(
+                        endpoint: "/movie/upcoming",
+                        title: "Upcoming movies"
+                    )
+                }.padding(.top, 10).padding(.bottom, 40)
             }.ignoresSafeArea().navigationTitle("Home").toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {

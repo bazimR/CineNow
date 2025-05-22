@@ -30,26 +30,20 @@ enum TMDBError: Error, LocalizedError {
 struct TMDBService {
     static let shared = TMDBService()
 
-    func fetchPopularMovies() async throws -> [Movie] {
-        // Step 1: Construct the base URL
-        guard let url = URL(string: "\(Constants.API.baseURL)movie/popular")
+    func fetchMovies(from endpoint: String) async throws -> [Movie] {
+        guard let url = URL(string: "\(Constants.API.baseURL)\(endpoint)")
         else {
-            throw TMDBError.invalidURL  // Throw error if URL is invalid
+            throw TMDBError.invalidURL
         }
 
-        // Step 2: Add query parameters (language in this case)
         var components = URLComponents(url: url, resolvingAgainstBaseURL: true)
-        let queryItems: [URLQueryItem] = [
+        components?.queryItems = [
             URLQueryItem(name: "language", value: Constants.API.language)
         ]
-        let localComponents = components
-        components?.queryItems =
-            (localComponents?.queryItems ?? []) + queryItems
         guard let finalURL = components?.url else {
-            throw TMDBError.invalidURL  // Throw error if final URL is malformed
+            throw TMDBError.invalidURL
         }
 
-        // Step 3: Create the URLRequest with necessary headers
         var request = URLRequest(url: finalURL)
         request.httpMethod = "GET"
         request.timeoutInterval = 10
@@ -57,12 +51,11 @@ struct TMDBService {
             "accept": "application/json",
             "Authorization": "Bearer \(Constants.API.key)",
         ]
+
         do {
-            let movieResponse: PopularMoviesResponse = try await NetworkManager.shared
-                .fetch(
-                    url: request,
-                    type: PopularMoviesResponse.self
-                )
+            let movieResponse: PopularMoviesResponse =
+                try await NetworkManager.shared
+                .fetch(url: request, type: PopularMoviesResponse.self)
             return movieResponse.results
         } catch let error as NetworkError {
             throw TMDBError.unknown(error)

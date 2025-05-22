@@ -1,23 +1,26 @@
 //
-//  HeroViewModel.swift
+//  DiscoverViewModel.swift
 //  CineNow
 //
-//  Created by Rishal Bazim on 16/05/25.
+//  Created by Rishal Bazim on 21/05/25.
 //
 
 import Foundation
 import SwiftUI
 
 @Observable
-class HeroViewModel {
+class DiscoverViewModel {
+    let endpoint: String
     var movies: [Movie] = []
     var errorFetching: Bool = false
     var isLoading: Bool = false
 
-    func fetchPopularMovies() async {
+    func fetchDiscoverMovies() async {
         isLoading = true
         do {
-            movies = try await TMDBService.shared.fetchMovies(from: "/movie/popular")
+            movies = try await TMDBService.shared.fetchMovies(
+                from: endpoint
+            )
             errorFetching = false
 
         } catch {
@@ -25,5 +28,11 @@ class HeroViewModel {
             print(error.localizedDescription)
         }
         isLoading = false
+    }
+
+    init(
+        endpoint: String,
+    ) {
+        self.endpoint = endpoint
     }
 }
