@@ -20,10 +20,10 @@ struct DiscoverView: View {
         )
     }
     var body: some View {
-        VStack {
+        VStack(alignment: .center, spacing: 0) {
             HStack {
                 Text(title)
-                    .font(.title3.bold())
+                    .font(.title2.bold())
                     .lineLimit(1)
                 Image(systemName: "chevron.right")
                     .font(.title)
@@ -31,24 +31,28 @@ struct DiscoverView: View {
                 Spacer()
             }.padding(.horizontal)
             ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack(spacing: 15) {
-                    ForEach(viewModel.movies.indices, id: \.self) { index in
-                        if let movie = viewModel.movies[safe: index],
-                            let posterPath = movie.poster_path
-                        {
-                            DiscoverMovieCard(
-                                imageUrl:
-                                    "\(Constants.API.imageBaseUrl)/w500\(posterPath)"
-                            )
+                if viewModel.isLoading {
+                    ProgressView()
+                } else {
+                    LazyHStack(spacing: 15) {
+                        ForEach(viewModel.movies.indices, id: \.self) { index in
+                            if let movie = viewModel.movies[safe: index],
+                                let posterPath = movie.poster_path
+                            {
+                                DiscoverMovieCard(
+                                    imageUrl:
+                                        "\(Constants.API.imageBaseUrl)/w500\(posterPath)"
+                                )
+                            }
                         }
-                    }
-                }.padding(.horizontal)
+                    }.padding(.horizontal)
+                }
             }.onAppear {
                 Task {
                     await viewModel.fetchDiscoverMovies()
                 }
             }
-        }.frame(height: 280)
+        }.frame(height: 350)
     }
 }
 

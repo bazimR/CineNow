@@ -37,7 +37,7 @@ struct HomeView: View {
         NavigationStack {
             ScrollView(.vertical, showsIndicators: false) {
                 HeroView()
-                VStack(spacing: 30) {
+                VStack(spacing: 10) {
                     DiscoverView(
                         endpoint: "/movie/top_rated",
                         title: "Top rated movies"

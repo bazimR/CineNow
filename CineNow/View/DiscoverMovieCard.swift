@@ -11,12 +11,7 @@ struct DiscoverMovieCard: View {
     let imageUrl: String
     var body: some View {
         VStack {
-            AsyncImage(
-                url: URL(
-                    string:
-                        imageUrl
-                )
-            ) { phase in
+            AsyncImage(url: URL(string: imageUrl)) { phase in
                 switch phase {
                 case .empty:
                     SkeletonView()
@@ -24,36 +19,24 @@ struct DiscoverMovieCard: View {
                     image
                         .resizable()
                         .scaledToFill()
-                        .frame(
-                            maxWidth: .infinity,
-                            maxHeight: .infinity
-                        )
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+
                 case .failure(_):
-                    Image(
-                        systemName:
-                            "photo.badge.exclamationmark"
-                    )
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 70, height: 70)
-                    .foregroundColor(.secondary)
-                    .frame(
-                        maxWidth: .infinity,
-                        maxHeight: .infinity
-                    )
-                    .background(Color.gray.opacity(0.2))
+                    Image(systemName: "photo.badge.exclamationmark")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 70, height: 70)
+                        .foregroundColor(.secondary)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .background(Color.gray.opacity(0.2))
+
                 @unknown default:
-                    Text("unknown error")
+                    Text("Unknown error")
+
                 }
             }
         }
-        .frame(width: 180, height: 280).background(
-            Color.gray
-        ).cornerRadius(
-            20,
-            corner: .allCorners
-        )
-        
+        .frame(width: 180, height: 280).cornerRadius(20, corner: .allCorners)
     }
 }
 

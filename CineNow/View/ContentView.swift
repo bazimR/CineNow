@@ -10,7 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var movielist: [Movie] = []
     var body: some View {
-        HomeView().colorScheme(.dark)
+        AppTab().colorScheme(.dark)
     }
 }
 
